@@ -1,7 +1,7 @@
 FROM nginx
 
 ENV APP_HOST=asgi
-ENV APP_PORT=9000
+ENV APP_PORT=8001
 ENV LISTEN_PORT=80
 
 COPY ./proxy_params /etc/nginx/
