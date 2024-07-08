@@ -29,10 +29,14 @@ jobs:
           password: ${{ secrets.SERVER_PASS }}
           port: 22
           script: |
-            docker stop django-server-container 2> /dev/null || true
-            docker rm django-server-container 2> /dev/null || true
-            docker stop nginx-server-container 2> /dev/null || true
-            docker rm nginx-server-container 2> /dev/null || true
+            if [ $(docker ps -q -f name=django-server-container) ]; then
+              docker stop django-server-container
+              docker rm django-server-container
+            fi
+            if [ $(docker ps -q -f name=nginx-server-container) ]; then
+              docker stop nginx-server-container
+              docker rm nginx-server-container
+            fi
             apt-get clean
             docker system prune -f > /dev/null 2>&1
             cat <<EOF > /home/server/qpoll/.env
@@ -82,4 +86,5 @@ jobs:
               docker stop my-frontend-app-container
               docker rm my-frontend-app-container
             fi
+            docker system prune -f
             docker-compose up -d --build
