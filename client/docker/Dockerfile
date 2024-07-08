@@ -10,7 +10,7 @@ RUN npm run build
 
 WORKDIR /app/dist
 
-COPY ../start.sh /start.sh
+COPY /start.sh /start.sh
 
 RUN chmod +x /start.sh
 
