@@ -23,7 +23,7 @@ services:
       - media-data:/vol/media
     container_name: nginx-server-container
     ports:
-      - 80:80
+      - 80:81
       - 443:443
 
 volumes:
