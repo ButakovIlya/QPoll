@@ -78,6 +78,8 @@ jobs:
             echo 'VITE_BASE_URL=http://${{ secrets.SERVER_HOST }}' > .env
             echo 'VITE_BASE_WS_URL=${{ secrets.SERVER_HOST }}' >> .env
             cd deploy
-            docker stop my-frontend-app-container || true
-            docker rm my-frontend-app-container || true
+            if [ $(docker ps -q -f name=my-frontend-app-container) ]; then
+              docker stop my-frontend-app-container
+              docker rm my-frontend-app-container
+            fi
             docker-compose up -d --build
