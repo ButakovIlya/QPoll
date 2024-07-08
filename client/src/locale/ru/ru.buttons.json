@@ -1,0 +1,25 @@
+{
+  "button": {
+    "signup": "Зарегистрироваться",
+    "login": "Войти",
+    "registration": "Регистрация",
+    "profile": "Профиль",
+    "createQuiz": "Создать квиз",
+    "createPoll": "Создать опрос",
+    "createForFree": "Создать бесплатно",
+    "applyFilters": "Применить фильтры",
+    "forgotPass": "Забыли пароль ?",
+    "send": "Отправить",
+
+    "addAnswer": "Добавить ответ",
+    "addFreeAnswer": "Добавить 'Другое'",
+
+    "downloadPDF": "Выгрузить в PDF",
+    "prepareDoc": "Подготовка документа...",
+    "downloadQR": "Скачать QR-код",
+    "selectImage": "Выбор изображения",
+
+    "cancel": "Отмена",
+    "apply": "Подтвердить"
+  }
+}

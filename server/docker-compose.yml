@@ -1,0 +1,31 @@
+version: "3.3"
+
+services:
+  asgi:
+    build: .
+    restart: always
+    command: daphne -b 0.0.0.0 -p 9000 qpoll.asgi:application
+    container_name: django-server-container-asgi
+    volumes:
+      - .:/app
+      - static-data:/vol/static
+      - media-data:/vol/media
+    ports:
+      - "9000:9000"
+
+
+  proxy:
+    build:
+      context: ./proxy
+    restart: always
+    volumes:
+      - static-data:/vol/static
+      - media-data:/vol/media
+    container_name: nginx-server-container
+    ports:
+      - 80:80
+      - 443:443
+
+volumes:
+  static-data:
+  media-data:

@@ -1,0 +1,83 @@
+name: Deploy Docker Container and Front-end to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASS }}
+          port: 22
+          source: "."
+          target: "/home"
+
+      - name: Execute docker commands
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASS }}
+          port: 22
+          script: |
+            docker stop django-server-container 2> /dev/null || true
+            docker rm django-server-container 2> /dev/null || true
+            docker stop nginx-server-container 2> /dev/null || true
+            docker rm nginx-server-container 2> /dev/null || true
+            apt-get clean
+            docker system prune -f > /dev/null 2>&1
+            cat <<EOF > /home/server/qpoll/.env
+            SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
+            DEBUG=False
+            DB_NAME=${{ secrets.DB_NAME }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_HOST=${{ secrets.SERVER_HOST }}
+            EMAIL_HOST_USER="theroflx@yandex.ru"
+            EMAIL_HOST_PASSWORD="whespimmmanwnoxh"
+            DEFAULT_FROM_EMAIL="theroflx@yandex.ru"
+            SERVER_EMAIL="theroflx@yandex.ru"
+            RECOVERY_CODE='7EYV7EXXYUUNKTPDFK9KWF37'
+            EOF
+            cd /home/server
+            docker-compose up -d --build
+
+  build-and-deploy-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASS }}
+          port: 22
+          source: "."
+          target: "/home"
+
+      - name: Execute docker commands
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASS }}
+          port: 22
+          script: |
+            cd /home/client
+            echo 'VITE_BASE_URL=http://${{ secrets.SERVER_HOST }}' > .env
+            echo 'VITE_BASE_WS_URL=${{ secrets.SERVER_HOST }}' >> .env
+            cd deploy
+            docker stop my-frontend-app-container || true
+            docker rm my-frontend-app-container || true
+            docker-compose up -d --build

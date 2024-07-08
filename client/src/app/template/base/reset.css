@@ -1,0 +1,17 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Golos Text', serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+.base-Popup-root:not(.base--expanded) {
+  display: none;
+}
+
+.MuiCardContent-root.que-card {
+  padding-bottom: 10px !important;
+}
