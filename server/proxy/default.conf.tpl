@@ -14,7 +14,7 @@ server {
     }
 
     location / {
-        proxy_pass      http:/localhost:9000;
+        proxy_pass      http://localhost:9000;
         include         /etc/nginx/proxy_params;
     }
 
