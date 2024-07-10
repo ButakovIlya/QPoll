@@ -290,6 +290,7 @@ class PollSettingsSerializer(serializers.ModelSerializer):
 
 
 class BasePollSerializer(serializers.ModelSerializer):
+    poll_id = serializers.UUIDField(required=False)
     name = serializers.CharField(validators=[BaseValidator.name], required=False, allow_blank=True)
     description = serializers.CharField(validators=[BaseValidator.description], required=False, allow_blank=True)
     tags = serializers.CharField(validators=[BaseValidator.description], required=False, allow_blank=True)
@@ -374,12 +375,20 @@ class BasePollSerializer(serializers.ModelSerializer):
         model = Poll
         fields = '__all__'
 
+    
+
     def create(self, validated_data):
         poll = super().create(validated_data)
-        poll_setts = PollSettings.objects.create()
-        # poll = generate_poll_qr(poll)
-        poll.poll_setts = poll_setts
-        poll.save()
+        PollSettings.objects.create(poll=poll)
+
+        if poll.poll_type.name == 'Быстрый':
+            fields = [
+                PollAuthField(poll=poll, name='ФИО', example='Иванов Иван Иванович'),
+                PollAuthField(poll=poll, name='Номер студенческого билета', example='ИКНТ12345', is_main=True),
+                PollAuthField(poll=poll, name='Группа', example='ПМИ-123')
+            ]
+
+            PollAuthField.objects.bulk_create(fields)
 
         return poll
 
