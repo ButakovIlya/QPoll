@@ -18,9 +18,4 @@ server {
         include         /etc/nginx/proxy_params;
     }
 
-    location /ws/ {
-        proxy_pass http://localhost:9000;
-        proxy_http_version 1.1;
-
-    }
 }
