@@ -141,7 +141,7 @@ def save_votes(answers, poll, my_profile, raw_answers,
                poll_answer_group=None, poll_participation_group=None, quick_voting_form=None):
     if not poll_answer_group:
         poll_answer_group_data = {
-                    'poll': poll.poll_id,
+                    'poll': poll.id,
                     'is_finished':True,
                     'voting_end_date': datetime.now()
         }
@@ -161,7 +161,7 @@ def save_votes(answers, poll, my_profile, raw_answers,
 
     if not poll_participation_group:
         poll_participation_group_data = {
-                'poll': poll.poll_id,
+                'poll': poll.id,
                 'is_latest': True,
             }
 
