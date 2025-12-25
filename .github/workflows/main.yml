@@ -1,4 +1,4 @@
-name: Deploy Docker Container and Front-end to Server
+name: Deploy Docker Container and Front-end to Server 2
 
 on:
   push:
